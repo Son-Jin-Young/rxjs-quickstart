@@ -1,0 +1,15 @@
+{
+  "name": "rxjs-quickstart",
+  "version": "1.0.0",
+  "description": "rxjs-quickstart",
+  "main": "index.html",
+  "repository": "https://github.com/Son-Jin-Young/rxjs-quickstart.git",
+  "author": "Son-Jin-Young <sos5550@hanmail.net>",
+  "license": "MIT",
+  "scripts": {
+    "serve": "lite-server"
+  },
+  "dependencies": {
+    "lite-server": "2.5.3"
+  }
+}
