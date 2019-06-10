@@ -12,3 +12,9 @@ RxJS Quick Start 서적 예제 및 활용 소스
 - Subject: 상태가 변경되는 대상
 - Observer: 변경되는 상태를 관찰하는 대상
 
+##### 3. RxJS의 패러다임
+- 리액티브 프로그래밍과 함수형 프로그래밍이 복합적으로 적용되어 있다.
+- Observable은 내부적으로 링크드 리스트 형식으로 이루어져 있다.
+
+
+<출처> [RxJS QuickStart - 저자 손찬욱](https://github.com/sculove/rxjs-book)

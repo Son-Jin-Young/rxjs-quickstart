@@ -1,3 +1,6 @@
+const {of} = rxjs;
+const {filter, map, reduce, switchMap} = rxjs.operators;
+
 fetch('https://swapi.co/api/people/?format=json').then(res => {
     if (res.status === 200) {
         return res.json();
@@ -5,32 +8,24 @@ fetch('https://swapi.co/api/people/?format=json').then(res => {
         throw new Error('Fetch Error!!');
     }
 }).then(json => {
-    document.querySelector('#users').innerHTML = process(json);
+    process(json);
 }).catch(err => {
     console.error(err);
 });
 
 function process(people) {
-    // const html = [];
-
-    // for (const user of people.results) {
-    //     if (/male|female/.test(user.gender)) {
-    //         const result = logic(user.height, user.mass, user.gender);
-    //         Object.assign(user, result);
-    //
-    //         html.push(makeHTML(user));
-    //     }
-    // }
-
-    // return html.join('');
-
-    return people.results
-        .filter(user => /male|female/.test(user.gender))
-        .map(user => Object.assign(user, logic(user.height, user.mass, user.gender)))
-        .reduce((html, user) => {
+    of(people).pipe(
+        switchMap(data => of(...data.results)),
+        filter(user => /male|female/.test(user.gender)),
+        map(user => Object.assign(user, logic(user.height, user.mass, user.gender))),
+        reduce((html, user) => {
             html.push(makeHTML(user));
             return html;
-        }, []).join('');
+        }, []),
+        map(html => html.join(''))
+    ).subscribe(html => {
+        document.querySelector('#users').innerHTML = html;
+    });
 }
 
 function logic(height, mass, gender) {
