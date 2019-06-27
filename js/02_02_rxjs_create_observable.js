@@ -139,3 +139,12 @@ of(1, -2, 3).pipe(
     (e) => console.error(e),
     () => console.log('never complete')
 );
+
+// 구독할 때마다 독립적으로 데이터를 전달한다.
+// const interval$ = interval(1000);
+//
+// interval$.subscribe((v) => console.log(v));
+//
+// setTimeout(() => {
+//     interval$.subscribe((v) => console.log(v));
+// }, 3000);
