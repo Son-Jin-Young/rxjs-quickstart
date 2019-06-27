@@ -32,8 +32,27 @@ RxJS 6.x에서 도트체이닝을 사용한다면, rxjs-compat 모듈이 필요�
 - Observer: Observable에 의해 전달된 데이터를 소비하는 주체
 - Subscription: Observable의 자원 해제를 담당, Observable의 구독을 종료하고 싶을 때 사용
 
+##### 3. Observable
+- next: 데이터 전달
+- error: 에러 발생
+- complete: 데이터 전달 완료
+- 모든 데이터를 Observable 인스턴스로 생성할 수 있다.
+- 읽기전용이고 불변객체이며 리액티브하다.
+
+##### 4. Observable의 구독 해지
+- 에러가 발생하여 observer.error를 호출하는 경우 구독을 해지한다.
+- 데이터 전달이 완료된 경우 observer.complete을 호출하는 경우 구독을 자동으로 해지한다.
+- 구독을 관리하는 Subscription에서 unsubscribe 메소드를 호출하면 등록된 observer들의 구독이 해지된다.
+
 ###### RxJS 함수
-- fromEvent(dom, event): dom의 event를 Observable로 변환한다.
+- of(...values): 인자에 있는 값을 차례로 전달하고 모두 전달되면 구독을 해지한다.
+- range(start, end, scheduler): start부터 end까지 1씩 증가시킨 숫자 데이터를 전달하고 모두 전달하면 종료하고 구독을 해지한다. start와 end는 정수로 입력해야 정상동작한다. 
+- fromEvent(target, event): target의 event를 Observable로 변환하고 event 발생시 데이터를 전달한다.
+- from(values): 기본타입을 제외한 배열, 배열같은 객체 등 거의 모든 데이터를 Observable로 변환하고 데이터가 모두 전달되면 구독을 해지한다.
+- interval(time): 지정된 time마다 0부터 1씩 증가하는 값을 만드는 Observable이다.
+- empty(): Observable의 상태를 변경하고자 할 때 사용자에게 완료가 되었음을 알려주기 위해 완료상태를 전달하고 구독을 해지한다.
+- throwError(): Observable의 상태를 변경하고자 할 때 사용자에게 에러의 발생을 알려주기 위해 에러상태를 전달하고 구독을 해지한다.
+- never(): 전달된 데이터를 전달하고 싶지 않을 때 사용한다.
 - pluck(key): Observable이 반환해주는 값에서 key에 해당하는 속성을 추출한다. key에 해당하는 속성이 없는 경우 undefined를 반환한다.
 - filter((data) => condition): 전달받는 Observable 값이 condition이 true인 경우 계속 진행하고, false인 경우 진행을 중단한다. 
 
