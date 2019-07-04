@@ -1,5 +1,5 @@
 const { Observable, interval, of, range, fromEvent, from, empty, throwError, NEVER } = rxjs;
-const { take, map, mergeMap } = rxjs.operators;
+const { take, map, mergeMap, takeUntil, switchMap } = rxjs.operators;
 
 // deprecated
 // const number$ = Observable.create((observer) => {
@@ -38,13 +38,16 @@ number$.subscribe(
 // setTimeout(() => {
 //      subscription.unsubscribe();
 // }, 5000);
-//
-// // interval 예제 리펙토링
+
+// interval 예제 리펙토링
 // const reInterval$ = interval(1000).pipe(
-//     map(() => new Date().toString()),
+//     map(() => {
+//         console.log('map');
+//         return new Date().toString();
+//     }),
 //     take(5)
 // );
-//
+
 // reInterval$.subscribe(
 //     (v) => console.log('re: ', v),
 //     (e) => console.error(e),
@@ -115,12 +118,24 @@ failed$.subscribe(
 
 // TODO: empty의 정확한 동작 확인 필요
 of(1, -2, 3).pipe(
-    map(v => v < 0 ? empty() : v)
+    // switchMap(v => v < 0 ? empty() : of(v))
+    mergeMap(v => v < 0 ? empty() : of(v))
 ).subscribe(
     (v) => console.log('empty', v),
     (e) => console.error(e),
     () => console.log('empty complete')
 );
+
+// empty().subscribe(
+//     (v) => console.log('empty', v),
+//     (e) => console.error(e),
+//     () => console.log('empty complete')
+// );
+
+// empty 1
+// empty Observable {_isScalar: false, _subscribe: ƒ}
+// empty 3
+// empty complete
 
 // TODO: throwError의 정확한 동작 확인 필요
 of(1, -2, 3).pipe(

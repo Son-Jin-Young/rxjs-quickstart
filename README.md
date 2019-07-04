@@ -44,6 +44,21 @@ RxJS 6.x에서 도트체이닝을 사용한다면, rxjs-compat 모듈이 필요�
 - 데이터 전달이 완료된 경우 observer.complete을 호출하는 경우 구독을 자동으로 해지한다.
 - 구독을 관리하는 Subscription에서 unsubscribe 메소드를 호출하면 등록된 observer들의 구독이 해지된다.
 
+##### 5. Function, Observable, Promise
+- Observable
+> 데이터를 개발자에게 전달하는 형태의 Push 방식
+> 구독이라는 과정을 통해 데이터를 전달받는 시점을 지연할 수 있다.
+> 구독할 때마다 독립적인 데이터를 각각의 Observer에게 전달한다.
+
+- Function
+> 데이터를 요청하는 형태의 Pull 방식
+> 호출 시 반환값이 한 개 뿐이다.
+
+- Promise
+> Observable과 같은 push 방식
+> Promise를 then하는 과정을 통해 시점을 지연할 수 있다.
+> 독립적이 아닌 결정된 상태값만을 반환한다.
+
 ###### RxJS 함수
 - of(...values): 인자에 있는 값을 차례로 전달하고 모두 전달되면 구독을 해지한다.
 - range(start, end, scheduler): start부터 end까지 1씩 증가시킨 숫자 데이터를 전달하고 모두 전달하면 종료하고 구독을 해지한다. start와 end는 정수로 입력해야 정상동작한다. 
