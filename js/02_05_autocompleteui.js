@@ -1,12 +1,11 @@
 const { fromEvent, from, zip, of, interval, merge, Observable, NEVER } = rxjs;
 const { ajax } = rxjs.ajax;
-const { map, pluck, mergeAll, mergeMap, switchMap, take, debounceTime, filter, distinctUntilChanged, tap } = rxjs.operators;
+const { map, pluck, mergeAll, switchAll, mergeMap, switchMap, take, debounceTime, filter, distinctUntilChanged, tap } = rxjs.operators;
 
 const keyup$ = fromEvent(document.getElementById('search'), 'keyup');
 
 const request$ = (query) => ajax.getJSON(`https://api.github.com/search/users?q=${query}`);
 // const request$ = from(fetch('https://api.github.com/search/users?q=sculove').then((res) => res.json()));
-
 // request$.subscribe(
 //     (data) => console.log('data ::', data)
 // );
@@ -22,17 +21,17 @@ const user$ = keyup$.pipe(
 
     distinctUntilChanged(),
 
-    // filter((value) => value.trim() !== ''),
+    filter((value) => value.trim() !== ''),
     // tap(() => layer.innerHTML = ''),
 
-    switchMap((value) => {
-        if (value.trim() !== '') {
-            return of(value);
-        } else {
-            layer.innerHTML = '';
-            return NEVER;
-        }
-    }),
+    // switchMap((value) => {
+    //     if (value.trim() !== '') {
+    //         return of(value);
+    //     } else {
+    //         layer.innerHTML = '';
+    //         return NEVER;
+    //     }
+    // }),
 
     // map((value) => request$(value)),
     // mergeAll()
@@ -54,31 +53,45 @@ function drawLayer(items) {
 }
 
 // mergeMap(i => 10*i--10*--10*i-|): 마블 다이어그램을 표현한 내용이다.
-// const obs$ = new Observable((observer) => {
-//     observer.next(1);
-//
-//     setTimeout(() => {
-//         observer.next(3);
-//     }, 3000);
-//
-//     setTimeout(() => {
-//         observer.next(5);
-//         observer.complete();
-//     }, 4500);
-// });
-//
+const obs$ = new Observable((observer) => {
+    observer.next(1);
+
+    setTimeout(() => {
+        observer.next(3);
+    }, 3000);
+
+    setTimeout(() => {
+        observer.next(5);
+        observer.complete();
+    }, 4500);
+});
+
+obs$.pipe(
+    map((v) => threeIntervalObservable(v)),
+    mergeAll()
+    // mergeMap((v) => threeIntervalObservable(v))
+).subscribe(
+    (res) => {
+        console.log(`mergeMap :: ${res[0]}`, '->', `${res[1]}`)
+    }
+);
+
 // obs$.pipe(
-//     mergeMap((v) =>
-//         interval(1000).pipe(
-//             map((time) => [time + 1, 10 * v]),
-//             take(3)
-//         )
-//     )
+//     map((v) => threeIntervalObservable(v)),
+//     switchAll()
+//     // switchMap((v) => threeIntervalObservable(v))
 // ).subscribe(
 //     (res) => {
-//         console.log(`${res[0]}`, '->', `${res[1]}`)
+//         console.log(`switchMap :: ${res[0]}`, '->', `${res[1]}`)
 //     }
 // );
+
+function threeIntervalObservable(value) {
+    return interval(1000).pipe(
+        map((time) => [time + 1, 10 * value]),
+        take(3)
+    );
+}
 
 // distinctUntilChanged(): 중복된 데이터가 연속적으로 들어오는걸 방지한다.
 // of(1, 1, 2, 2, 3).pipe(

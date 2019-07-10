@@ -52,4 +52,10 @@ number$.subscribe(
     () => console.log('observable 1 :: complete')
 );
 
+number$.subscribe(
+    (v) => console.log('observable 1 ::', v),
+    (e) => console.error('observable 1 ::', e),
+    () => console.log('observable 1 :: complete')
+);
+
 console.log('-- after subscribe');
