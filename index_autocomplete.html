@@ -5,6 +5,7 @@
     <title>Title</title>
     <script src="node_modules/rxjs/bundles/rxjs.umd.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
     <style>
         .autocomplete {
             position: relative;
@@ -35,6 +36,14 @@
             margin: 0;
             padding: 0;
         }
+
+        #loading {
+            position: absolute;
+            z-index: 2;
+            top: 2px;
+            right: 0px;
+            display: none;            
+        }
     </style>
 </head>
 <body>
@@ -47,7 +56,11 @@
         <ul id="suggestLayer">
 
         </ul>
+        <div id="loading">
+            <i class="fas fa-spinner fa-pulse"></i>
+        </div>
     </div>
-    <script src="js/02_05_autocompleteui.js"></script>
+    <!-- <script src="js/02_05_autocompleteui.js"></script> -->
+    <script src="js/02_06_autocompleteui_refactor.js"></script>
 </body>
 </html>
