@@ -53,28 +53,28 @@ function drawLayer(items) {
 }
 
 // mergeMap(i => 10*i--10*--10*i-|): 마블 다이어그램을 표현한 내용이다.
-const obs$ = new Observable((observer) => {
-    observer.next(1);
+// const obs$ = new Observable((observer) => {
+//     observer.next(1);
 
-    setTimeout(() => {
-        observer.next(3);
-    }, 3000);
+//     setTimeout(() => {
+//         observer.next(3);
+//     }, 3000);
 
-    setTimeout(() => {
-        observer.next(5);
-        observer.complete();
-    }, 4500);
-});
+//     setTimeout(() => {
+//         observer.next(5);
+//         observer.complete();
+//     }, 4500);
+// });
 
-obs$.pipe(
-    map((v) => threeIntervalObservable(v)),
-    mergeAll()
-    // mergeMap((v) => threeIntervalObservable(v))
-).subscribe(
-    (res) => {
-        console.log(`mergeMap :: ${res[0]}`, '->', `${res[1]}`)
-    }
-);
+// obs$.pipe(
+//     map((v) => threeIntervalObservable(v)),
+//     mergeAll()
+//     // mergeMap((v) => threeIntervalObservable(v))
+// ).subscribe(
+//     (res) => {
+//         console.log(`mergeMap :: ${res[0]}`, '->', `${res[1]}`)
+//     }
+// );
 
 // obs$.pipe(
 //     map((v) => threeIntervalObservable(v)),
