@@ -67,6 +67,7 @@ RxJS 6.x에서 도트체이닝을 사용한다면, rxjs-compat 모듈이 필요�
 - Hot Observable
 > Observable을 subscribe와 unsubscribe에 상관없이 하나의 스트림을 공유한다.
 > subscribe 시점과 상관없이 데이터를 중간부터 전달한다.
+
 |구분|Cold Observable|Hot Observable|
 |:---|:---|:---|
 |데이터 주체 생성시기|Observable 내부|Observable 외부|

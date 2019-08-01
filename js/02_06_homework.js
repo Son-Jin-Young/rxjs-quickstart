@@ -14,8 +14,8 @@ const [even$, odd$] = partition(
     (v) => v % 2 === 0
 );
 
-// even$.subscribe(v => console.log('even :', v));
-// odd$.subscribe(v => console.log('odd :', v));
+// even$.subscribe(v => console.log('partition.even :', v));
+// odd$.subscribe(v => console.log('partition.odd :', v));
 
 const true$ = of('even');
 const false$ = of('odd');
@@ -23,8 +23,8 @@ const false$ = of('odd');
 const iif$ = interval(1000).pipe(
     switchMap((val) => iif(
         () => val % 2 === 0,
-        of('even : ' + val),
-        of('odd : ' + val) 
+        of('iif.even : ' + val),
+        of('iif.odd : ' + val)
     ))
 );
 
