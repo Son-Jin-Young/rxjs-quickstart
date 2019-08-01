@@ -5,8 +5,7 @@ const { map, take, mergeMap, switchMap, debounceTime, filter, distinctUntilChang
 // partition의 경우, 첫번째 인자인 Observable이 전달하는 값으로 true, false를 구분하여 [참, 거짓] 형태의 Observable Array를 반환한다.
 // iif의 경우, 첫번째 인자에 조건식이 들어가고, 참인 경우 두번째 인자의 Observable, 거짓인 경우 세번째 인자의 Observable을 반환한다.
 // 차이점
-// 1. iif는 단독적으로 사용하기 힘들다.
-// 2. iif는 한개의 Observable만 반환하여 구독할 때 참, 거짓을 다시 구분지어야 한다.
+// 1. iif는 true, false 중 하나만 반환하므로, 구독할 때 참, 거짓을 구분지어야 동작을 입력해야 한다.
 
 const number$ = interval(1000);
 
@@ -29,4 +28,4 @@ const iif$ = interval(1000).pipe(
     ))
 );
 
-iif$.subscribe((v) => console.log('iif$ ::', v))
+iif$.subscribe((v) => console.log('iif$ ::', v));
