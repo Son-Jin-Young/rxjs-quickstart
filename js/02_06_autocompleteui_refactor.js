@@ -31,12 +31,12 @@ const user$ = search$.pipe(
     // mergeMap((value) => request$(value)),
     switchMap((value) => request$(value)),
     tap(hideLoading),
-    // catchError((e, origin) => {
-    //     console.log('subscribe 유지');
-    //     return origin;
-    // }),
-    retry(2),
-    finalize(hideLoading)
+    catchError((e, origin) => {
+        console.log('subscribe 유지');
+        return origin;
+    }),
+    // retry(2),
+    // finalize(hideLoading)
 );
 
 user$.subscribe(
@@ -48,6 +48,7 @@ user$.subscribe(
 reset$.subscribe();
     
 function drawLayer(items) {
+    console.log('drawLayer');
     $layer.innerHTML = items.map((user) => {
         return `<li class="user">
 <img src="${user.avatar_url}" alt="" width="50px" height="50px"/>
