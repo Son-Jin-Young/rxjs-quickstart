@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="node_modules/rxjs/bundles/rxjs.umd.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+    <style>
+        .view {
+            overflow: hidden;
+        }
+
+        .view .container {
+            white-space: nowrap;
+            padding: 0;
+            list-style: none;
+            font-size: 0;
+        }
+
+        .view .panel {
+            width: 100%;
+            min-height: 200px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quick Start</h1>
+    <hr>
+    <a href="/">HOME</a>
+    <a href="/index_autocomplete.html">자동완성 UI</a>
+    <a href="#">캐러셀 UI</a>>
+    <div id="carousel" class="view">
+        <ul class="container">
+            <li class="panel" style="background-color: lightgray;"></li>
+            <li class="panel" style="background-color: red;"></li>
+            <li class="panel" style="background-color: lightblue;"></li>
+            <li class="panel" style="background-color: pink;"></li>
+        </ul>
+    </div>
+    <script src="js/02_08_carousel.js"></script>
+</body>
+</html>
