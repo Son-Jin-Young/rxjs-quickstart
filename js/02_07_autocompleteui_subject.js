@@ -37,6 +37,7 @@ const keyup$ = fromEvent($search, 'keyup').pipe(
 );
 
 const [search$, empty$] = partition(
+    // subject,
     keyup$,
     ((value) => value.trim() !== '')
 );
@@ -83,29 +84,29 @@ function hideLoading() {
 }
 
 // ConnectableObservable 예제
-// const number$ = interval(1000).pipe(tap((v) => console.log('interval val ::', v)));
-// const connectable$ = number$.pipe(publish(), refCount());
+const number$ = interval(1000).pipe(tap((v) => console.log('interval val ::', v)));
+const connectable$ = number$.pipe(publish(), refCount());
 
-// let connectSubscription, sub1, sub2;
+let connectSubscription, sub1, sub2;
 
-// sub1 = connectable$.subscribe((v) => console.log('observer 1 ::', v));
-// // refCount를 사용하면 자동으로 reference를 관리해주므로 제거
-// // connectSubscription = connectable$.connect();
+sub1 = connectable$.subscribe((v) => console.log('observer 1 ::', v));
+// refCount를 사용하면 자동으로 reference를 관리해주므로 제거
+// connectSubscription = connectable$.connect();
 
-// setTimeout(() => {
-//     sub2 = connectable$.subscribe((v) => console.log('observer 2 ::', v));
-// }, 1100);
+setTimeout(() => {
+    sub2 = connectable$.subscribe((v) => console.log('observer 2 ::', v));
+}, 1100);
 
-// setTimeout(() => {
-//     console.log('observer 1 is unsubscribe');
-//     sub1.unsubscribe();
-// }, 2100);
+setTimeout(() => {
+    console.log('observer 1 is unsubscribe');
+    sub1.unsubscribe();
+}, 2100);
 
-// setTimeout(() => {
-//     console.log('observer 2 is unsubscribe');
-//     sub2.unsubscribe();
-//     // refCount를 사용하면 자동으로 reference를 관리해주므로 제거
-//     // console.log('connectableObservable is unsubscribe');
-//     // connect를 해지하지 않으면 공유하고 있는 Observable을 계속 동작한다.
-//     // connectSubscription.unsubscribe();
-// }, 3100);
+setTimeout(() => {
+    console.log('observer 2 is unsubscribe');
+    sub2.unsubscribe();
+    // refCount를 사용하면 자동으로 reference를 관리해주므로 제거
+    // console.log('connectableObservable is unsubscribe');
+    // connect를 해지하지 않으면 공유하고 있는 Observable을 계속 동작한다.
+    // connectSubscription.unsubscribe();
+}, 3100);
