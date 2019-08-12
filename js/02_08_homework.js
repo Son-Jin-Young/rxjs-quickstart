@@ -37,16 +37,14 @@ const weight$ = fromEvent($WEIGHT, 'change').pipe(
 );
 
 const drag$ = drawStart$.pipe(
-    withLatestFrom(color$),
-    withLatestFrom(weight$),
+    withLatestFrom(color$, weight$, (event, color, weight) => {
+        return {x: event.layerX, y: event.layerY, color, weight};
+    }),
     tap((event) => {
-        const color = event[0][1];
-        const weight = event[1];
-
         context.beginPath();
-        context.moveTo(event[0][0].layerX, event[0][0].layerY);
-        context.strokeStyle = color;
-        context.lineWidth = weight;
+        context.moveTo(event.x, event.y);
+        context.strokeStyle = event.color;
+        context.lineWidth = event.weight;
     }),
     switchMap((start) =>
         drawing$.pipe(

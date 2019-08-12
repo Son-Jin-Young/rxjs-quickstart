@@ -1,6 +1,8 @@
 const { Observable, fromEvent, merge } = rxjs;
 const { ajax } = rxjs.ajax;
-const { tap, map, takeUntil, mergeAll, mergeMap, switchMap, take, first, startWith, withLatestFrom, share } = rxjs.operators;
+const { tap, map, takeUntil, mergeAll, mergeMap, switchMap, take, first, startWith, withLatestFrom, share, scan } = rxjs.operators;
+
+const THRESHOLD = 200;
 
 const $VIEW = document.getElementById('carousel');
 const $CONTAINER = document.querySelector('.container');
@@ -29,53 +31,74 @@ const resize$ = fromEvent(window, 'resize').pipe(
 resize$.subscribe((width) => console.log('resize window ::', width));
 
 const drag$ = start$.pipe(
-    // map(
-    //     (start) => move$.pipe(
-    //         // end$ 발생시 complete처리하여 구독 해제
-    //         takeUntil(end$)
-    //     )
-    // ),
-    // mergeAll()
-    // map과 mergeAll 합성
-    // mergeMap((start) => move$.pipe(takeUntil(end$)))
-    // start$발생시 move$가 생성됨으로 switchMap으로 변경
     switchMap((start) => {
         return move$.pipe(
             map((move) => move - start),
+            map((distance) => ({distance})),
             takeUntil(end$)
         );
     }),
-    // tap(() => console.log('drag!!')),
     share()
 );
 
-// drag$.subscribe((distance) => console.log('move - start ::', distance));
-
 const drop$ = drag$.pipe(
-    // map((drag) => end$.pipe(first()/* take(1) */)),
-    // mergeAll()
-    // drag는 distance 값(move - start)
     switchMap((drag) => {
         return end$.pipe(
             map((event) => drag),
             first()
         );
     }),
-    withLatestFrom(resize$)
+    withLatestFrom(resize$, (drag, size) => {
+        return {...drag, size};
+    })
 );
-
-// drop$.subscribe((drop) => console.log('drop ::', drop));
 
 const carousel$ = merge(
     drag$,
     drop$
+).pipe(
+    scan((store, {distance, size}) => {
+        const updateStore = {
+            from: -(store.index * store.size) + distance
+        };
+
+        if (size === undefined) {
+            // drag
+            updateStore.to = updateStore.from;
+        } else {
+            // drop
+            let tobeIndex = store.index;
+
+            if (Math.abs(distance) >= THRESHOLD) {
+                tobeIndex = distance < 0 ? Math.min(tobeIndex + 1, PANEL_COUNT - 1) : Math.max(tobeIndex - 1, 0);
+            }
+
+            updateStore.index = tobeIndex;
+            updateStore.to = -(tobeIndex * size);
+            updateStore.size = size;
+        }
+
+        return {...store, ...updateStore};
+    }, {
+        from: 0,
+        to: 0,
+        index: 0,
+        size: 0
+    })
 );
 
-carousel$.subscribe(v => console.log('carousel ::', v));
+carousel$.subscribe(store => {
+    console.log('carousel :: ', store);
+    translateX(store.to);
+});
 
 // click의 위치값
 function getPageX(obs$) {
     return obs$.pipe(
         map((event) => SUPPORT_TOUCH ? event.changeTouches[0].pageX : event.pageX)
     );
+}
+
+function translateX(posX) {
+    $CONTAINER.style.transform = `translate3d(${posX}px, 0, 0)`;
 }
