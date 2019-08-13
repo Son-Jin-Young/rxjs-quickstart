@@ -16,8 +16,8 @@ const EVENTS = {
     end: SUPPORT_TOUCH ? 'touchend' : 'mouseup'
 };
 
-const drawStart$ = fromEvent($VIEW, EVENTS.start);
-const drawing$ = fromEvent($VIEW, EVENTS.move);
+const drawStart$ = fromEvent($VIEW, EVENTS.start).pipe(getLayerXY);
+const drawing$ = fromEvent($VIEW, EVENTS.move).pipe(getLayerXY);
 const drawEnd$ = fromEvent($VIEW, EVENTS.end);
 const clear$ = fromEvent($CLEAR, 'click');
 
@@ -37,19 +37,27 @@ const weight$ = fromEvent($WEIGHT, 'change').pipe(
 );
 
 const drag$ = drawStart$.pipe(
-    withLatestFrom(color$, weight$, (event, color, weight) => {
-        return {x: event.layerX, y: event.layerY, color, weight};
-    }),
+    withLatestFrom(color$),
+    withLatestFrom(weight$),
     tap((event) => {
         context.beginPath();
-        context.moveTo(event.x, event.y);
-        context.strokeStyle = event.color;
-        context.lineWidth = event.weight;
+        context.moveTo(event[0][0].x, event[0][0].y);
+        context.strokeStyle = event[0][1];
+        context.lineWidth = event[1];
     }),
+    // withLatestFrom(color$, weight$, (event, color, weight) => {
+    //     return {x: event.x, y: event.y, color, weight};
+    // }),
+    // tap((event) => {
+    //     context.beginPath();
+    //     context.moveTo(event.x, event.y);
+    //     context.strokeStyle = event.color;
+    //     context.lineWidth = event.weight;
+    // }),
     switchMap((start) =>
         drawing$.pipe(
             map((move) => {
-                context.lineTo(move.layerX, move.layerY);
+                context.lineTo(move.x, move.y);
                 context.stroke();
                 return move;
             }),
@@ -68,18 +76,21 @@ const drop$ = drag$.pipe(
     )
 );
 
-const carousel$ = merge(
+const draw$ = merge(
     drag$,
     drop$
 );
 
-carousel$.subscribe((event) => {
-    // console.log(event);
-});
+draw$.subscribe();
 
-function getPageX(obs$) {
+function getLayerXY(obs$) {
     return obs$.pipe(
-        map((event) => event)
-        // map((event) => SUPPORT_TOUCH ? event.changeTouches[0].pageX : event.pageX)
+        // map((event) => event)
+        map((event) => {
+            return {
+                x: SUPPORT_TOUCH ? event.changeTouches[0].layerX : event.layerX,
+                y: SUPPORT_TOUCH ? event.changeTouches[0].layerY : event.layerY
+            };
+        })
     );
 }

@@ -1,6 +1,6 @@
-const { Observable, fromEvent, merge } = rxjs;
+const { of, Observable, fromEvent, merge } = rxjs;
 const { ajax } = rxjs.ajax;
-const { tap, map, takeUntil, mergeAll, mergeMap, switchMap, take, first, startWith, withLatestFrom, share, scan } = rxjs.operators;
+const { tap, map, takeUntil, mergeAll, mergeMap, switchMap, take, first, startWith, withLatestFrom, share, scan, reduce } = rxjs.operators;
 
 const THRESHOLD = 200;
 
@@ -88,7 +88,6 @@ const carousel$ = merge(
 );
 
 carousel$.subscribe(store => {
-    console.log('carousel :: ', store);
     translateX(store.to);
 });
 
@@ -102,3 +101,27 @@ function getPageX(obs$) {
 function translateX(posX) {
     $CONTAINER.style.transform = `translate3d(${posX}px, 0, 0)`;
 }
+
+of(10, 10, 20, 0, 50).pipe(
+    reduce((acc, curr, index) => {
+        acc.sum += curr;
+        acc.avg = acc.sum / (index + 1);
+
+        return acc;
+    }, {
+        sum: 0,
+        avg: 0
+    })
+).subscribe((v) => console.log('reduce', v));
+
+of(10, 10, 20, 0, 50).pipe(
+    scan((acc, curr, index) => {
+        acc.sum += curr;
+        acc.avg = acc.sum / (index + 1);
+
+        return acc;
+    }, {
+        sum: 0,
+        avg: 0
+    })
+).subscribe((v) => console.log('scan', v));
