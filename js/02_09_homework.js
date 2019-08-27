@@ -24,6 +24,9 @@ const move$ = fromEvent($VIEW, EVENTS.move).pipe(
 ).pipe(tap(() => console.log('drag move')));
 const end$ = fromEvent($VIEW, EVENTS.end).pipe(tap(() => console.log('mouseup')));
 const leave$ = fromEvent($VIEW, 'mouseleave').pipe(tap(() => console.log('mouseleave')));
+
+const out$ = merge(end$, leave$);
+
 const resize$ = fromEvent(window, 'resize').pipe(
     startWith(0),
     map((event) => $VIEW.clientWidth)
@@ -36,7 +39,7 @@ const drag$ = start$.pipe(
         return move$.pipe(
             map((move) => move - start),
             map((distance) => ({distance})),
-            takeUntil(merge(end$, leave$))
+            takeUntil(out$)
         );
     }),
     share()
@@ -44,8 +47,7 @@ const drag$ = start$.pipe(
 
 const drop$ = drag$.pipe(
     switchMap((drag) => {
-        return merge(end$, leave$).pipe(
-            tap(() => console.log('drag end')),
+        return out$.pipe(
             map((event) => drag),
             first()
         );
