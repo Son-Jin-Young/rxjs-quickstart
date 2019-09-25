@@ -2,15 +2,21 @@
   "name": "rxjs-quickstart",
   "version": "1.0.0",
   "description": "rxjs-quickstart",
-  "main": "index_autocomplete.html",
+  "main": "index.js",
   "repository": "https://github.com/Son-Jin-Young/rxjs-quickstart.git",
   "author": "Son-Jin-Young <sos5550@hanmail.net>",
   "license": "MIT",
   "scripts": {
-    "serve": "lite-server"
+    "serve": "lite-server",
+    "start": "nodemon --inspect api-server.js # API 처리하는 서버"
   },
   "dependencies": {
-    "lite-server": "2.5.3",
-    "rxjs": "6.5.2"
+    "express": "^4.16.3",
+    "isomorphic-fetch": "^2.2.1",
+    "xml2json-light": "^1.0.6"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5",
+    "rxjs": "^6.2.0"
   }
 }
